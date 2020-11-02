@@ -1,7 +1,7 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 from .game import Game
-from .logic import Color
+from .models import Color, Position
 
 
 class Player:
@@ -15,14 +15,14 @@ class Player:
 
 
 class HumanPlayer(Player):
-    def play(self, game: Game):
+    def play(self, game: Game) -> Optional[Position]:
         legal_actions = game.get_legal_actions()
         length = game.board.length
         for row in range(length):
             for col in range(length):
-                if legal_actions[row][col]:
+                if legal_actions[Position(row, col)]:
                     print("[", row, col, end=" ] ")
-        action: Optional[Tuple[int, int]]
+        action: Optional[Position]
         while True:
             input_action = input()
             if input_action == "pass":
@@ -34,8 +34,8 @@ class HumanPlayer(Player):
                 try:
                     row, col = [int(i) for i in input_a]
                     if 0 <= row < length and 0 <= col < length:
-                        if legal_actions[row][col]:
-                            action = (row, col)
+                        if legal_actions[Position(row, col)]:
+                            action = Position(row, col)
                             break
                 except ValueError:
                     # Input needs to be an integer

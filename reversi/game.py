@@ -1,17 +1,18 @@
 from __future__ import annotations
 
-from typing import Optional, Tuple
+from typing import Optional
 
 from . import logic
+from .models import Board, Color, LegalActions, Position
 
 
 class Game:
-    def __init__(self, board: logic.Board, color: logic.Color):
+    def __init__(self, board: Board, color: Color):
         self.current_color = color
         self.board = board
         self._legal_actions = logic.obtain_legal_actions(board, self.current_color)
         opponent_legal_actions = logic.obtain_legal_actions(
-            board, logic.Color(-self.current_color)
+            board, Color(-self.current_color)
         )
         self._game_over = not (
             self._legal_actions.exists_legal_actions()
@@ -21,19 +22,19 @@ class Game:
     @staticmethod
     def init_game(length: int) -> Game:
         board = logic.init_board(length)
-        return Game(board, logic.Color.DARK)
+        return Game(board, Color.DARK)
 
     def is_game_over(self) -> bool:
         return self._game_over
 
-    def get_legal_actions(self) -> logic.LegalActions:
+    def get_legal_actions(self) -> LegalActions:
         return self._legal_actions
 
-    def execute_action(self, action: Optional[Tuple[int, int]]):
+    def execute_action(self, action: Optional[Position]):
         """execute action
 
         Args:
-            action (Optional[Tuple[int, int]]): 石を置く場所，Noneならパス
+            action (Optional[Position]): 石を置く場所，Noneならパス
 
         Raises:
             IllegalActionError: 石を置けるのにパスした場合
@@ -42,33 +43,34 @@ class Game:
         if not self.is_legal_action(action):
             raise IllegalActionError("不正な操作です．")
         # Noneならパスなので，boardは変わらない
-        if isinstance(action, tuple):
-            self.board = logic.execute_action(self.board, action, self.current_color)
-        self.current_color = logic.Color(-self.current_color)
+        if isinstance(action, Position):
+            self.board = logic.execute_action(self.board, self.current_color, action)
+        self.current_color = self.current_color.reverse()
         self._legal_actions = logic.obtain_legal_actions(self.board, self.current_color)
         # 自分も相手も石を置ける場所がないなら，ゲーム終了
         self._game_over = (
             not self._legal_actions.exists_legal_actions()
             and not logic.obtain_legal_actions(
-                self.board, logic.Color(-self.current_color)
+                self.board, self.current_color.reverse()
             ).exists_legal_actions()
         )
 
-    def is_legal_action(self, action: Optional[Tuple[int, int]]) -> bool:
+    def is_legal_action(self, action: Optional[Position]) -> bool:
         """is legal action
 
         パスできるのはlegal_actionsがない場合のみ，石を置く場合は，legalな場所のみTrue
 
         Args:
-            action (Optional[Tuple[int, int]]): 石を置く場所，Noneならパス
+            action (Optional[Position]): 石を置く場所，Noneならパス
 
         Returns:
             bool: True if legal action, False if illegal action
         """
         return (action is None and not self._legal_actions.exists_legal_actions()) or (
-            isinstance(action, tuple)
-            and 0 <= action[0] < self.board.length
-            and 0 <= action[1] < self.board.length
+            isinstance(action, Position)
+            and Position(0, 0)
+            <= action
+            < Position(self.board.length, self.board.length)
             and self._legal_actions[action]
         )
 

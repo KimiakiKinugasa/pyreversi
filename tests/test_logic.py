@@ -1,20 +1,32 @@
 import numpy as np
 from reversi.logic import (
-    Board,
-    LegalActions,
     _increment_search,
     execute_action,
     init_board,
     is_legal_action,
     obtain_legal_actions,
 )
+from reversi.models import Board, Color, Direction, LegalActions, Position
+
+
+def test_init_board():
+    config = np.array(
+        [
+            [0, 0, 0, 0],
+            [0, 1, -1, 0],
+            [0, -1, 1, 0],
+            [0, 0, 0, 0],
+        ],
+        np.int8,
+    )
+    assert Board(config) == init_board(4)
 
 
 def test_is_legal_action():
     board = init_board(4)
-    assert not is_legal_action(board, 1, (0, 0))
-    assert not is_legal_action(board, 1, (0, 1))
-    assert is_legal_action(board, 1, (0, 2))
+    assert not is_legal_action(board, Color.DARK, Position(0, 0))
+    assert not is_legal_action(board, Color.DARK, Position(0, 1))
+    assert is_legal_action(board, Color.DARK, Position(0, 2))
 
 
 def test_increment_search():
@@ -27,12 +39,30 @@ def test_increment_search():
         ]
     )
     board = Board(config)
-    assert _increment_search(board, 1, (3, 1), (0, -1)) == (True, (3, 1))
-    assert _increment_search(board, 1, (3, 2), (0, -1)) == (True, (3, 1))
-    assert _increment_search(board, 1, (3, 3), (0, -1)) == (False, None)
-    assert _increment_search(board, 1, (0, 1), (0, -1)) == (True, (0, 0))
-    assert _increment_search(board, 1, (0, 2), (0, -1)) == (True, (0, 0))
-    assert _increment_search(board, 1, (0, 3), (0, -1)) == (False, None)
+    assert _increment_search(board, Color.DARK, Position(3, 1), Direction(0, -1)) == (
+        True,
+        Position(3, 1),
+    )
+    assert _increment_search(board, Color.DARK, Position(3, 2), Direction(0, -1)) == (
+        True,
+        Position(3, 1),
+    )
+    assert _increment_search(board, Color.DARK, Position(3, 3), Direction(0, -1)) == (
+        False,
+        None,
+    )
+    assert _increment_search(board, Color.DARK, Position(0, 1), Direction(0, -1)) == (
+        True,
+        Position(0, 0),
+    )
+    assert _increment_search(board, Color.DARK, Position(0, 2), Direction(0, -1)) == (
+        True,
+        Position(0, 0),
+    )
+    assert _increment_search(board, Color.DARK, Position(0, 3), Direction(0, -1)) == (
+        False,
+        None,
+    )
 
 
 def test_obtain_legal_actions():
@@ -42,16 +72,16 @@ def test_obtain_legal_actions():
     flags[(1, 3)] = True
     flags[(2, 0)] = True
     flags[(3, 1)] = True
-    assert obtain_legal_actions(board, 1) == LegalActions(flags)
+    assert obtain_legal_actions(board, Color.DARK) == LegalActions(flags)
     board = Board(np.zeros((4, 4), dtype=np.int8))
-    assert obtain_legal_actions(board, 1) == LegalActions(
+    assert obtain_legal_actions(board, Color.DARK) == LegalActions(
         np.zeros((4, 4), dtype=np.int8)
     )
 
 
 def test_execute_action():
     board = init_board(4)
-    new_board = execute_action(board, (1, 3), 1)
+    new_board = execute_action(board, Color.DARK, Position(1, 3))
     config = np.array(
         [
             [0, 0, 0, 0],
@@ -72,7 +102,7 @@ def test_execute_action():
         dtype=np.int8,
     )
     board = Board(config)
-    new_board = execute_action(board, (0, 0), 1)
+    new_board = execute_action(board, Color.DARK, Position(0, 0))
     after_config = np.array(
         [
             [1, 1, 1, 1],
@@ -87,6 +117,6 @@ def test_execute_action():
 
 def test_exists_legal_actions():
     board = init_board(4)
-    assert obtain_legal_actions(board, 1).exists_legal_actions()
+    assert obtain_legal_actions(board, Color.DARK).exists_legal_actions()
     board = Board(np.zeros((4, 4), dtype=np.int8))
-    assert not obtain_legal_actions(board, 1).exists_legal_actions()
+    assert not obtain_legal_actions(board, Color.DARK).exists_legal_actions()
