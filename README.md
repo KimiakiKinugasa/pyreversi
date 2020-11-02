@@ -2,7 +2,24 @@
 
 ## Setup
 
-`poetry install`
+### Clone this repository
+
+```sh
+git clone https://github.com/KimiakiKinugasa/reversi.git
+poetry install
+```
+
+### Install with poetry
+
+```sh
+poetry add git+https://github.com/KimiakiKinugasa/reversi.git
+```
+
+### Install with pip
+
+```sh
+pip install git+https://github.com/KimiakiKinugasa/reversi.git
+```
 
 ## Play
 
