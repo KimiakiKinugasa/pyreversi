@@ -144,7 +144,7 @@ def execute_action(board: Board, color: Color, position: Position) -> Board:
     assert len(flip_position_list) > 1
     config = board.config.copy()
     for position in flip_position_list:
-        config[position.row][position.col] = color
+        config[position] = color
     return Board(config)
 
 

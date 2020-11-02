@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from enum import IntEnum
+from typing import Final, NamedTuple
 
 import numpy as np
 
@@ -36,36 +37,26 @@ class Disk(Reversible):
             return "-"
 
 
-class Direction:
-    def __init__(self, row: int, col: int):
-        self.row = row
-        self.col = col
-
-    def __eq__(self, position):
-        return (
-            isinstance(position, Position)
-            and self.row == position.row
-            and self.col == position.col
-        )
-
-    def __ne__(self, position):
-        return not self.__eq__(position)
+class Direction(NamedTuple):
+    row: int
+    col: int
 
 
-class Position:
-    def __init__(self, row: int, col: int):
-        self.row = row
-        self.col = col
+_DIRECTIONS: Final = [
+    Direction(-1, -1),
+    Direction(-1, 0),
+    Direction(-1, 1),
+    Direction(0, -1),
+    Direction(0, 1),
+    Direction(1, -1),
+    Direction(1, 0),
+    Direction(1, 1),
+]
 
-    def __eq__(self, position):
-        return (
-            isinstance(position, Position)
-            and self.row == position.row
-            and self.col == position.col
-        )
 
-    def __ne__(self, position):
-        return not self.__eq__(position)
+class Position(NamedTuple):
+    row: int
+    col: int
 
     def __lt__(self, position):
         if not isinstance(position, Position):
@@ -93,18 +84,6 @@ class Position:
         return Position(self.row + direction.row, self.col + direction.col)
 
 
-_DIRECTIONS = [
-    Direction(-1, -1),
-    Direction(-1, 0),
-    Direction(-1, 1),
-    Direction(0, -1),
-    Direction(0, 1),
-    Direction(1, -1),
-    Direction(1, 0),
-    Direction(1, 1),
-]
-
-
 class LegalActions:
     """可能な操作の一覧"""
 
@@ -125,7 +104,7 @@ class LegalActions:
         return np.array_equal(self.flags, legal_actions.flags)
 
     def __getitem__(self, position: Position) -> bool:
-        return self.flags[position.row][position.col]
+        return self.flags[position]
 
     def __str__(self):
         return str(self.flags)
@@ -163,7 +142,7 @@ class Board:
         return np.array_equal(self.config, board.config)
 
     def __getitem__(self, position: Position) -> Disk:
-        return self.config[position.row][position.col]
+        return self.config[position]
 
     def __str__(self):
         board_str = ""
