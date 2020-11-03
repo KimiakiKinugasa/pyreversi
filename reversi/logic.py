@@ -36,10 +36,10 @@ def obtain_legal_actions(board: Board, color: Color) -> LegalActions:
         LegalActions: legal actions
     """
     flags = np.zeros((board.length, board.length), dtype=np.bool)
-    for row in range(board.length):
-        for col in range(board.length):
-            if is_legal_action(board, color, Position(row, col)):
-                flags[row][col] = True
+    for position in [
+        Position(row, col) for row in range(board.length) for col in range(board.length)
+    ]:
+        flags[position] = is_legal_action(board, color, position)
     return LegalActions(flags)
 
 
