@@ -1,5 +1,6 @@
 from typing import Optional
 
+from . import logic
 from .game import Game
 from .models import Color, Position
 
@@ -26,7 +27,7 @@ class HumanPlayer(Player):
         while True:
             input_action = input()
             if input_action == "pass":
-                if not legal_actions.exists_legal_actions():
+                if not logic.exists_legal_actions(legal_actions):
                     action = None
                     break
             input_a = input_action.split(" ")

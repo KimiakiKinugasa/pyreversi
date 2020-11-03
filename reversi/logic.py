@@ -93,7 +93,7 @@ def _increment_search(
     Returns:
         Tuple[bool, Optional[Position]]: colorのマスに到達できたかの真偽値と到達した位置
     """
-    if not (Position(0, 0) <= position < Position(board.length, board.length)):
+    if not Position(0, 0) <= position < Position(board.length, board.length):
         return False, None
     if board[position] == Disk.NULL:
         return False, None
@@ -159,3 +159,12 @@ def count_color(board: Board, color: Color) -> int:
         int: 数えたい色の数
     """
     return np.sum(board.config == color)
+
+
+def exists_legal_actions(legal_actions: LegalActions) -> bool:
+    """exists legal actions
+
+    Returns:
+        bool: True if exists legal actions, False if not
+    """
+    return np.count_nonzero(legal_actions.flags) != 0

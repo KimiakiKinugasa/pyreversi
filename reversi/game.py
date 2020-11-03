@@ -15,8 +15,8 @@ class Game:
             board, Color(-self.current_color)
         )
         self._game_over = not (
-            self._legal_actions.exists_legal_actions()
-            and opponent_legal_actions.exists_legal_actions()
+            logic.exists_legal_actions(self._legal_actions)
+            and logic.exists_legal_actions(opponent_legal_actions)
         )
 
     @staticmethod
@@ -48,11 +48,10 @@ class Game:
         self.current_color = self.current_color.reverse()
         self._legal_actions = logic.obtain_legal_actions(self.board, self.current_color)
         # 自分も相手も石を置ける場所がないなら，ゲーム終了
-        self._game_over = (
-            not self._legal_actions.exists_legal_actions()
-            and not logic.obtain_legal_actions(
-                self.board, self.current_color.reverse()
-            ).exists_legal_actions()
+        self._game_over = not logic.exists_legal_actions(
+            self._legal_actions
+        ) and not logic.exists_legal_actions(
+            logic.obtain_legal_actions(self.board, self.current_color.reverse())
         )
 
     def is_legal_action(self, action: Optional[Position]) -> bool:
@@ -66,7 +65,9 @@ class Game:
         Returns:
             bool: True if legal action, False if illegal action
         """
-        return (action is None and not self._legal_actions.exists_legal_actions()) or (
+        return (
+            action is None and not logic.exists_legal_actions(self._legal_actions)
+        ) or (
             isinstance(action, Position)
             and Position(0, 0)
             <= action

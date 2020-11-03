@@ -2,6 +2,7 @@ import numpy as np
 from reversi.logic import (
     _increment_search,
     execute_action,
+    exists_legal_actions,
     init_board,
     is_legal_action,
     obtain_legal_actions,
@@ -117,6 +118,6 @@ def test_execute_action():
 
 def test_exists_legal_actions():
     board = init_board(4)
-    assert obtain_legal_actions(board, Color.DARK).exists_legal_actions()
+    assert exists_legal_actions(obtain_legal_actions(board, Color.DARK))
     board = Board(np.zeros((4, 4), dtype=np.int8))
-    assert not obtain_legal_actions(board, Color.DARK).exists_legal_actions()
+    assert not exists_legal_actions(obtain_legal_actions(board, Color.DARK))

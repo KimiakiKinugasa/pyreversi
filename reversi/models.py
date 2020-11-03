@@ -42,7 +42,7 @@ class Direction(NamedTuple):
     col: int
 
 
-_DIRECTIONS: Final = [
+_DIRECTIONS: Final = (
     Direction(-1, -1),
     Direction(-1, 0),
     Direction(-1, 1),
@@ -51,7 +51,7 @@ _DIRECTIONS: Final = [
     Direction(1, -1),
     Direction(1, 0),
     Direction(1, 1),
-]
+)
 
 
 class Position(NamedTuple):
@@ -96,26 +96,27 @@ class LegalActions:
             flags (np.ndarray): 置ける所はTrue，置けない所はFalse
             color Color: 石の色
         """
-        self.flags = flags
+        self._flags = flags.copy()
+        self._flags.setflags(write=False)
 
     def __eq__(self, legal_actions):
-        if not isinstance(legal_actions, LegalActions):
-            return False
-        return np.array_equal(self.flags, legal_actions.flags)
+
+        return isinstance(legal_actions, LegalActions) and np.array_equal(
+            self._flags, legal_actions.flags
+        )
 
     def __getitem__(self, position: Position) -> bool:
-        return self.flags[position]
+        return self._flags[position]
 
     def __str__(self):
-        return str(self.flags)
+        return str(self._flags)
 
-    def exists_legal_actions(self) -> bool:
-        """exists legal actions
+    def __repr__(self):
+        return "LegalActions(\n{})".format(repr(self._flags))
 
-        Returns:
-            bool: True if exists legal actions, False if not
-        """
-        return np.count_nonzero(self.flags) != 0
+    @property
+    def flags(self):
+        return self._flags
 
 
 class Board:
@@ -128,29 +129,36 @@ class Board:
         """constractor
 
         config must be a squire matrix. elements of config must be -1, 0, or 1.
-        上記の条件はチェックしないから，外部からあんまり呼ばないで.
+        上記の条件はチェックしないから，外部から呼ぶ場合は注意すること．
 
         Args:
             config (np.ndarray): configuration of the board
         """
-        self.config = config
-        self.length = len(config)
+        self._config = config.copy()
+        self._config.setflags(write=False)
+        self._length = len(config)
 
     def __eq__(self, board):
-        if not isinstance(board, Board):
-            return False
-        return np.array_equal(self.config, board.config)
+        return isinstance(board, Board) and np.array_equal(self._config, board.config)
 
     def __getitem__(self, position: Position) -> Disk:
-        return self.config[position]
+        return self._config[position]
 
     def __str__(self):
         board_str = ""
-        for row in range(self.length):
-            for col in range(self.length):
-                board_str += str(Disk(self.config[row][col]))
+        for row in range(self._length):
+            for col in range(self._length):
+                board_str += str(Disk(self[Position(row, col)]))
             board_str += "\n"
         return board_str
 
     def __repr__(self):
-        return "Board(\n{})".format(repr(self.config))
+        return "Board(\n{})".format(repr(self._config))
+
+    @property
+    def config(self):
+        return self._config
+
+    @property
+    def length(self):
+        return self._length
