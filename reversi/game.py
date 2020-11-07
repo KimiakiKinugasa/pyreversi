@@ -60,11 +60,7 @@ class Game:
             bool: True if legal action, False if illegal action
         """
         return (action is None and not self._legal_actions) or (
-            isinstance(action, Position)
-            and Position(0, 0)
-            <= action
-            < Position(self.board.length, self.board.length)
-            and action in self._legal_actions
+            isinstance(action, Position) and action in self._legal_actions
         )
 
     def count_disk(self, disk: logic.Disk) -> int:

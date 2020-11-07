@@ -52,7 +52,6 @@ def test_board():
         "--------\n"
     )
     board = Board(config)
-    assert board.length == 8
     assert str(board) == config_str
     assert board == eval(repr(board))
     assert board[Position(0, 0)] == Square.NULL
@@ -64,5 +63,5 @@ def test_board():
     # board cannot be updated
     with pytest.raises(TypeError):
         board[Position(0, 0)] = Square.DARK
-    with pytest.raises(AttributeError):
-        board.length = 10
+    with pytest.raises(IndexError):
+        board[Position(-1, -1)]

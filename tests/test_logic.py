@@ -3,7 +3,7 @@ from reversi.logic import (
     _increment_search,
     execute_action,
     init_board,
-    is_legal_action,
+    _is_legal_action,
     obtain_legal_actions,
 )
 from reversi.models import Board, Direction, Disk, Position
@@ -24,9 +24,9 @@ def test_init_board():
 
 def test_is_legal_action():
     board = init_board(4)
-    assert not is_legal_action(board, Disk.LIGHT, Position(0, 0))
-    assert not is_legal_action(board, Disk.LIGHT, Position(0, 1))
-    assert is_legal_action(board, Disk.LIGHT, Position(0, 2))
+    assert not _is_legal_action(board, Disk.LIGHT, Position(0, 0))
+    assert not _is_legal_action(board, Disk.LIGHT, Position(0, 1))
+    assert _is_legal_action(board, Disk.LIGHT, Position(0, 2))
 
 
 def test_increment_search():

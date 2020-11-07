@@ -100,20 +100,21 @@ class Board:
         """
         self._config = config.copy()
         self._config.setflags(write=False)
-        self._length = len(config)
 
     def __eq__(self, board):
-        return isinstance(board, Board) and np.array_equal(self._config, board.config)
+        return isinstance(board, Board) and np.array_equal(self._config, board._config)
 
     def __getitem__(self, position) -> Square:
         if not isinstance(position, Position):
             raise TypeError(f"{position} is not 'Position'")
+        if not self.is_in_range(position):
+            raise IndexError(f"{position} is out of range")
         return self._config[position]
 
     def __str__(self):
         board_str = ""
-        for row in range(self._length):
-            for col in range(self._length):
+        for row in range(len(self._config)):
+            for col in range(len(self._config)):
                 board_str += str(Square(self[Position(row, col)]))
             board_str += "\n"
         return board_str
@@ -125,6 +126,5 @@ class Board:
     def config(self):
         return self._config
 
-    @property
-    def length(self):
-        return self._length
+    def is_in_range(self, position: Position) -> bool:
+        return Position(0, 0) <= position < Position(*self._config.shape)

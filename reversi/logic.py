@@ -37,17 +37,13 @@ def obtain_legal_actions(board: Board, disk: Disk) -> FrozenSet[Position]:
     """
     return frozenset(
         filter(
-            lambda position: is_legal_action(board, disk, position),
-            [
-                Position(row, col)
-                for row in range(board.length)
-                for col in range(board.length)
-            ],
+            lambda position: _is_legal_action(board, disk, position),
+            map(lambda index: Position(*index), np.ndindex(board.config.shape)),
         )
     )
 
 
-def is_legal_action(board: Board, disk: Disk, position: Position) -> bool:
+def _is_legal_action(board: Board, disk: Disk, position: Position) -> bool:
     """legal actionか
 
     Args:
@@ -66,11 +62,7 @@ def is_legal_action(board: Board, disk: Disk, position: Position) -> bool:
         adjacent_position = position + direction
         # 隣の位置がマスをはみ出すか隣の位置のマスの色がdiskの逆でないないなら
         if (
-            not (
-                Position(0, 0)
-                <= adjacent_position
-                < Position(board.length, board.length)
-            )
+            not board.is_in_range(adjacent_position)
             or board[adjacent_position] != disk.reverse()
         ):
             continue
@@ -97,7 +89,7 @@ def _increment_search(
     Returns:
         Tuple[bool, Optional[Position]]: diskのマスに到達できたかの真偽値と到達した位置
     """
-    if not Position(0, 0) <= position < Position(board.length, board.length):
+    if not board.is_in_range(position):
         return False, None
     if board[position] == Square.NULL:
         return False, None
@@ -128,11 +120,7 @@ def execute_action(board: Board, disk: Disk, position: Position) -> Board:
         adjacent_position = position + direction
         # 隣の位置がマスをはみ出すか隣の位置のマスの色がdiskの逆でないないなら
         if (
-            not (
-                Position(0, 0)
-                <= adjacent_position
-                < Position(board.length, board.length)
-            )
+            not board.is_in_range(adjacent_position)
             or board[adjacent_position] != disk.reverse()
         ):
             continue
@@ -162,4 +150,4 @@ def count_disk(board: Board, disk: Disk) -> int:
     Returns:
         int: 数えたい石の数
     """
-    return np.sum(board.config == disk)
+    return np.count_nonzero(board.config == disk)
