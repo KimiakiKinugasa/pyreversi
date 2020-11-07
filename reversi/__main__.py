@@ -1,18 +1,22 @@
 import reversi.game
-from reversi.logic import Color
-from reversi.player import HumanPlayer
+from reversi.logic import Disk
+from reversi.players import HumanPlayer, RandomPlayer
 
 game = reversi.game.Game.init_game(4)
-print(str(Color.DARK), game.count_color(Color.DARK))
-print(str(Color.LIGHT), game.count_color(Color.LIGHT))
+player1 = HumanPlayer()
+player2 = RandomPlayer()
 
+players_list = [player1, player2]
+turn = 0
 print(game.board)
 while not game.is_game_over():
-    action = HumanPlayer().play(game)
+    action = players_list[turn % 2].play(game)
     if not game.is_legal_action(action):
         print("無効な操作です．")
         continue
     game.execute_action(action)
     print(game.board)
-print(Color.DARK, game.count_color(Color.DARK))
-print(Color.LIGHT, game.count_color(Color.LIGHT))
+    turn += 1
+print("turn", turn)
+print(Disk.DARK, game.count_disk(Disk.DARK))
+print(Disk.LIGHT, game.count_disk(Disk.LIGHT))
