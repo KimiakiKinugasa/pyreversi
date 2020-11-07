@@ -1,4 +1,3 @@
-import numpy as np
 import pytest
 from numpy import array
 from reversi.models import Board, Direction, Disk, Position, Square

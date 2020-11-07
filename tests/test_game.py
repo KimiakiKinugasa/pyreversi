@@ -31,15 +31,6 @@ def test_execute_action():
         ],
         dtype=np.int8,
     )
-    flags = np.array(
-        [
-            [1, 0, 1, 0],
-            [0, 0, 0, 0],
-            [1, 0, 0, 0],
-            [0, 0, 0, 0],
-        ],
-        dtype=np.bool,
-    )
     assert game.board == Board(config)
     assert game.current_disk == Disk.LIGHT
     assert game.get_legal_actions() == frozenset(

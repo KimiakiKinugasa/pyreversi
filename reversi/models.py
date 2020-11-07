@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import IntEnum
-from typing import Final, NamedTuple, Type
+from typing import Final, NamedTuple
 
 import numpy as np
 

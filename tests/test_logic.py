@@ -6,7 +6,7 @@ from reversi.logic import (
     is_legal_action,
     obtain_legal_actions,
 )
-from reversi.models import Board, Direction, Disk, Position, Square
+from reversi.models import Board, Direction, Disk, Position
 
 
 def test_init_board():
