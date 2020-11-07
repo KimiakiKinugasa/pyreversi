@@ -1,20 +1,20 @@
 import numpy as np
 import pytest
 from numpy import array
-from reversi.models import Board, Color, Direction, Disk, LegalActions, Position
-
-
-def test_color():
-    assert Color.LIGHT == Color.DARK.reverse()
+from reversi.models import Board, Direction, Disk, Position, Square
 
 
 def test_disk():
-    assert Disk.DARK == Color.DARK
     assert Disk.LIGHT == Disk.DARK.reverse()
-    assert Disk.NULL == 0
-    assert str(Disk.DARK) == "x"
-    assert str(Disk.LIGHT) == "o"
-    assert str(Disk.NULL) == "-"
+
+
+def test_square():
+    assert Square.DARK == Disk.DARK
+    assert Square.LIGHT == Disk.LIGHT
+    assert Square.NULL == 0
+    assert str(Square.DARK) == "x"
+    assert str(Square.LIGHT) == "o"
+    assert str(Square.NULL) == "-"
 
 
 def test_position():
@@ -22,9 +22,11 @@ def test_position():
     assert Position(0, 0) != Position(0, 1)
     assert Position(0, 1) <= Position(0, 1)
     assert Position(0, 1) <= Position(0, 2)
-    assert not Position(1, 1) <= Position(0, 2)
-    assert not Position(1, 1) > Position(0, 2)
+    assert not Position(1, 1).__le__(Position(0, 2))
+    assert not Position(1, 1).__gt__(Position(0, 2))
     assert Position(0, 1) + Direction(0, 1) == Position(0, 2)
+    with pytest.raises(TypeError):
+        Position(0, 0) + Position(0, 1)
 
 
 def test_board():
@@ -54,21 +56,14 @@ def test_board():
     assert board.length == 8
     assert str(board) == config_str
     assert board == eval(repr(board))
-    assert board[Position(0, 0)] == Disk.NULL
+    assert board[Position(0, 0)] == Square.NULL
     # config cannot be replaced.
     with pytest.raises(AttributeError):
         board.config = config
-    # board cannot be updated
     with pytest.raises(ValueError):
-        board[0][0] = Disk.DARK
+        board.config[0][0] = Square.DARK
+    # board cannot be updated
+    with pytest.raises(TypeError):
+        board[Position(0, 0)] = Square.DARK
     with pytest.raises(AttributeError):
         board.length = 10
-
-
-def test_legal_actions():
-    legal_actions = LegalActions(np.zeros((4, 4), np.bool))
-    assert not legal_actions[Position(0, 0)]
-    assert legal_actions == LegalActions(np.zeros((4, 4), np.bool))
-    assert legal_actions == eval(repr(legal_actions))
-    with pytest.raises(AttributeError):
-        legal_actions.flags = np.zeros((4, 4), np.bool)

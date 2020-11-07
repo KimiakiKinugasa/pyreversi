@@ -1,33 +1,29 @@
 from __future__ import annotations
 
-from typing import Optional
+from typing import FrozenSet, Optional
 
 from . import logic
-from .models import Board, Color, LegalActions, Position
+from .models import Board, Disk, Position
 
 
 class Game:
-    def __init__(self, board: Board, color: Color):
-        self.current_color = color
+    def __init__(self, board: Board, disk: Disk):
+        self.current_disk = disk
         self.board = board
-        self._legal_actions = logic.obtain_legal_actions(board, self.current_color)
-        opponent_legal_actions = logic.obtain_legal_actions(
-            board, Color(-self.current_color)
-        )
-        self._game_over = not (
-            logic.exists_legal_actions(self._legal_actions)
-            and logic.exists_legal_actions(opponent_legal_actions)
+        self._legal_actions = logic.obtain_legal_actions(board, self.current_disk)
+        self._game_over = not self._legal_actions and not logic.obtain_legal_actions(
+            board, self.current_disk.reverse()
         )
 
     @staticmethod
     def init_game(length: int) -> Game:
         board = logic.init_board(length)
-        return Game(board, Color.DARK)
+        return Game(board, Disk.DARK)
 
     def is_game_over(self) -> bool:
         return self._game_over
 
-    def get_legal_actions(self) -> LegalActions:
+    def get_legal_actions(self) -> FrozenSet[Position]:
         return self._legal_actions
 
     def execute_action(self, action: Optional[Position]):
@@ -44,14 +40,12 @@ class Game:
             raise IllegalActionError("不正な操作です．")
         # Noneならパスなので，boardは変わらない
         if isinstance(action, Position):
-            self.board = logic.execute_action(self.board, self.current_color, action)
-        self.current_color = self.current_color.reverse()
-        self._legal_actions = logic.obtain_legal_actions(self.board, self.current_color)
+            self.board = logic.execute_action(self.board, self.current_disk, action)
+        self.current_disk = self.current_disk.reverse()
+        self._legal_actions = logic.obtain_legal_actions(self.board, self.current_disk)
         # 自分も相手も石を置ける場所がないなら，ゲーム終了
-        self._game_over = not logic.exists_legal_actions(
-            self._legal_actions
-        ) and not logic.exists_legal_actions(
-            logic.obtain_legal_actions(self.board, self.current_color.reverse())
+        self._game_over = not self._legal_actions and not logic.obtain_legal_actions(
+            self.board, self.current_disk.reverse()
         )
 
     def is_legal_action(self, action: Optional[Position]) -> bool:
@@ -65,18 +59,16 @@ class Game:
         Returns:
             bool: True if legal action, False if illegal action
         """
-        return (
-            action is None and not logic.exists_legal_actions(self._legal_actions)
-        ) or (
+        return (action is None and not self._legal_actions) or (
             isinstance(action, Position)
             and Position(0, 0)
             <= action
             < Position(self.board.length, self.board.length)
-            and self._legal_actions[action]
+            and action in self._legal_actions
         )
 
-    def count_color(self, color: logic.Color) -> int:
-        return logic.count_color(self.board, color)
+    def count_disk(self, disk: logic.Disk) -> int:
+        return logic.count_disk(self.board, disk)
 
 
 class IllegalActionError(ValueError):
