@@ -1,10 +1,11 @@
 import reversi.game
 from reversi.logic import Disk
-from reversi.players import HumanPlayer, RandomPlayer
+from reversi.players import GreedyPlayer, HumanPlayer, RandomPlayer
 
-game = reversi.game.Game.init_game(4)
-player1 = HumanPlayer()
-player2 = RandomPlayer()
+game = reversi.game.Game.init_game(6)
+# player1 = HumanPlayer()
+player1 = RandomPlayer()
+player2 = GreedyPlayer()
 
 players_list = [player1, player2]
 turn = 0
