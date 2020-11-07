@@ -60,14 +60,11 @@ def _is_legal_action(board: Board, disk: Disk, position: Position) -> bool:
     # 周囲8マスにdiskの逆がある場合，その方向に進んで，NULLにならずにdiskがあればTrue
     for direction in _DIRECTIONS:
         adjacent_position = position + direction
-        # 隣の位置がマスをはみ出すか隣の位置のマスの色がdiskの逆でないないなら
         if (
-            not board.is_in_range(adjacent_position)
-            or board[adjacent_position] != disk.reverse()
+            board.is_in_range(adjacent_position)
+            and board[adjacent_position] == disk.reverse()
+            and _increment_search(board, disk, adjacent_position, direction)[0]
         ):
-            continue
-        legal, _ = _increment_search(board, disk, adjacent_position, direction)
-        if legal:
             return True
     return False
 
