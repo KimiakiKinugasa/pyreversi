@@ -116,14 +116,18 @@ class Board:
 
     def __str__(self):
         board_str = ""
-        for row in range(len(self._config)):
-            for col in range(len(self._config)):
-                board_str += str(Square(self[Position(row, col)]))
+        for line in self._config:
+            for elem in line:
+                board_str += str(Square(elem))
             board_str += "\n"
-        return board_str
+        # remove last new line
+        return board_str[:-1]
 
     def __repr__(self):
         return f"Board(\n{repr(self._config)})"
+
+    def __iter__(self):
+        return iter(map(lambda index: Position(*index), np.ndindex(self.config.shape)))
 
     @property
     def config(self):

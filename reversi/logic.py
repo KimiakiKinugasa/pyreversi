@@ -36,10 +36,7 @@ def obtain_legal_actions(board: Board, disk: Disk) -> FrozenSet[Position]:
         FrozenSet[Position]: legal actions
     """
     return frozenset(
-        filter(
-            lambda position: _is_legal_action(board, disk, position),
-            map(lambda index: Position(*index), np.ndindex(board.config.shape)),
-        )
+        filter(lambda position: _is_legal_action(board, disk, position), board)
     )
 
 

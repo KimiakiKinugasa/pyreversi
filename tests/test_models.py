@@ -50,7 +50,7 @@ def test_board():
         "---ox---\n"
         "--------\n"
         "--------\n"
-        "--------\n"
+        "--------"
     )
     board = Board(config)
     assert Board(np.zeros((4, 4), dtype=np.int8)) == Board(
