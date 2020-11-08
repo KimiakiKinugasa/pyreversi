@@ -120,7 +120,7 @@ class Board:
         return board_str
 
     def __repr__(self):
-        return "Board(\n{})".format(repr(self._config))
+        return f"Board(\n{repr(self._config)})"
 
     @property
     def config(self):

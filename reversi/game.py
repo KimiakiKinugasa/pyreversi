@@ -33,8 +33,7 @@ class Game:
             action (Optional[Position]): 石を置く場所，Noneならパス
 
         Raises:
-            IllegalActionError: 石を置けるのにパスした場合
-            IllegalActionError: 石を置けない場所を指定した場合
+            IllegalActionError: 石を置けるのにパスした場合，石を置けない場所を指定した場合
         """
         if not self.is_legal_action(action):
             raise IllegalActionError("不正な操作です．")
