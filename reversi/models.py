@@ -104,6 +104,9 @@ class Board:
     def __eq__(self, board):
         return isinstance(board, Board) and np.array_equal(self._config, board._config)
 
+    def __ne__(self, board):
+        return not self.__eq__(board)
+
     def __getitem__(self, position) -> Square:
         if not isinstance(position, Position):
             raise TypeError(f"{position} is not 'Position'")

@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 from numpy import array
 from reversi.models import Board, Direction, Disk, Position, Square
@@ -52,6 +53,12 @@ def test_board():
         "--------\n"
     )
     board = Board(config)
+    assert Board(np.zeros((4, 4), dtype=np.int8)) == Board(
+        np.zeros((4, 4), dtype=np.int8)
+    )
+    assert Board(np.zeros((4, 4), dtype=np.int8)) != Board(
+        np.ones((4, 4), dtype=np.int8)
+    )
     assert str(board) == config_str
     assert board == eval(repr(board))
     assert board[Position(0, 0)] == Square.NULL
