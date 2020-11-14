@@ -127,7 +127,7 @@ class Board:
         return f"Board(\n{repr(self._config)})"
 
     def __iter__(self):
-        return iter(map(lambda index: Position(*index), np.ndindex(self.config.shape)))
+        return iter(map(lambda index: Position(*index), np.ndindex(self._config.shape)))
 
     @property
     def config(self):
