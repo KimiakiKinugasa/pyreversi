@@ -28,7 +28,14 @@ pip install git+https://github.com/KimiakiKinugasa/reversi.git
 ## Docker
 
 Build  
-`docker build -t reversi .`
+`docker build -t pyreversi .`
 
 Play  
-`docker run --rm -it reversi python -m reversi`
+`docker run --rm -it pyreversi python -m pyreversi`
+
+## Build documentation
+
+```sh
+sphinx-apidoc -f -o ./docs ./pyreversi
+sphinx-build -b singlehtml ./docs ./docs/_build
+```
