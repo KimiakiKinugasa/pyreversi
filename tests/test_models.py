@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
 from numpy import array
-from reversi.models import Board, Direction, Disk, Position, Square
+
+from pyreversi.models import Board, Direction, Disk, Position, Square
 
 
 def test_disk():

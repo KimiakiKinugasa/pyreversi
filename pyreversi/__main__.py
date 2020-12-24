@@ -1,8 +1,8 @@
-import reversi.game
-from reversi.logic import Disk
-from reversi.players import GreedyPlayer, HumanPlayer, RandomPlayer
+import pyreversi.game
+from pyreversi.logic import Disk
+from pyreversi.players import GreedyPlayer, RandomPlayer
 
-game = reversi.game.Game.init_game(6)
+game = pyreversi.game.Game.init_game(6)
 # player1 = HumanPlayer()
 player1 = RandomPlayer()
 player2 = GreedyPlayer()

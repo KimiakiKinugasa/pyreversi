@@ -1,8 +1,9 @@
 import numpy as np
 import pytest
-from reversi.game import Game, IllegalActionError
-from reversi.logic import init_board, obtain_legal_actions
-from reversi.models import Board, Disk, Position
+
+from pyreversi.game import Game, IllegalActionError
+from pyreversi.logic import init_board, obtain_legal_actions
+from pyreversi.models import Board, Disk, Position
 
 
 def test_init_game():

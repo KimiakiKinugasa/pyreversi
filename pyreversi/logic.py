@@ -8,7 +8,7 @@ from typing import FrozenSet, Optional, Tuple
 
 import numpy as np
 
-from .models import _DIRECTIONS, Board, Direction, Disk, Position, Square
+from pyreversi.models import _DIRECTIONS, Board, Direction, Disk, Position, Square
 
 
 def init_board(length: int):

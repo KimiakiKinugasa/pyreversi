@@ -1,7 +1,8 @@
 import numpy as np
-from reversi.game import Game
-from reversi.models import Board, Disk, Position, Square
-from reversi.players import GreedyPlayer
+
+from pyreversi.game import Game
+from pyreversi.models import Board, Disk, Position, Square
+from pyreversi.players import GreedyPlayer
 
 
 def test_greedy_player():

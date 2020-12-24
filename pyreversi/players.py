@@ -1,9 +1,9 @@
 import random
 from typing import Dict, List, Optional
 
-from .game import Game
-from .logic import count_disk, execute_action
-from .models import Disk, Position
+from pyreversi.game import Game
+from pyreversi.logic import count_disk, execute_action
+from pyreversi.models import Disk, Position
 
 
 class Player:

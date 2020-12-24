@@ -1,12 +1,13 @@
 import numpy as np
-from reversi.logic import (
+
+from pyreversi.logic import (
     _increment_search,
+    _is_legal_action,
     execute_action,
     init_board,
-    _is_legal_action,
     obtain_legal_actions,
 )
-from reversi.models import Board, Direction, Disk, Position
+from pyreversi.models import Board, Direction, Disk, Position
 
 
 def test_init_board():

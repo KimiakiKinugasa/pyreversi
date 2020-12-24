@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import FrozenSet, Optional
 
-from . import logic
-from .models import Board, Disk, Position
+from pyreversi import logic
+from pyreversi.models import Board, Disk, Position
 
 
 class Game:
