@@ -5,7 +5,7 @@ from pyreversi.models import Board, Disk, Position, Square
 from pyreversi.players import GreedyPlayer
 
 
-def test_greedy_player():
+def test_greedy_player() -> None:
     config = np.array(
         [
             [Square.NULL, Square.LIGHT, Square.DARK],

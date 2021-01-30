@@ -1,3 +1,4 @@
+"""reversi players"""
 import random
 from typing import Dict, List, Optional
 
@@ -9,10 +10,10 @@ from pyreversi.models import Disk, Position
 class Player:
     disk: Disk
 
-    def set_disk(self, disk: Disk):
+    def set_disk(self, disk: Disk) -> None:
         self.disk = disk
 
-    def play(self, game):
+    def play(self, game: Game) -> Optional[Position]:
         pass
 
 

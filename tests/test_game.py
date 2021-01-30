@@ -6,7 +6,7 @@ from pyreversi.logic import init_board, obtain_legal_actions
 from pyreversi.models import Board, Disk, Position
 
 
-def test_init_game():
+def test_init_game() -> None:
     game = Game.init_game(8)
     assert game.current_disk == Disk.DARK
     assert game.board == init_board(8)
@@ -14,16 +14,16 @@ def test_init_game():
     assert game.is_game_over() is False
 
 
-def test_game_over():
+def test_game_over() -> None:
     board = Board(np.zeros((8, 8), dtype=np.int8))
     game = Game(board, Disk.LIGHT)
     assert game.is_game_over() is True
 
 
-def test_execute_action():
+def test_execute_action() -> None:
     game = Game.init_game(4)
     game.execute_action(Position(0, 1))
-    config = np.array(
+    config: np.ndarray = np.array(
         [
             [0, 1, 0, 0],
             [0, 1, 1, 0],

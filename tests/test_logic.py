@@ -10,7 +10,7 @@ from pyreversi.logic import (
 from pyreversi.models import Board, Direction, Disk, Position
 
 
-def test_init_board():
+def test_init_board() -> None:
     config = np.array(
         [
             [0, 0, 0, 0],
@@ -23,14 +23,14 @@ def test_init_board():
     assert Board(config) == init_board(4)
 
 
-def test_is_legal_action():
+def test_is_legal_action() -> None:
     board = init_board(4)
     assert not _is_legal_action(board, Disk.LIGHT, Position(0, 0))
     assert not _is_legal_action(board, Disk.LIGHT, Position(0, 1))
     assert _is_legal_action(board, Disk.LIGHT, Position(0, 2))
 
 
-def test_increment_search():
+def test_increment_search() -> None:
     config = np.array(
         [
             [1, -1, -1, 0],
@@ -66,7 +66,7 @@ def test_increment_search():
     )
 
 
-def test_obtain_legal_actions():
+def test_obtain_legal_actions() -> None:
     board = init_board(4)
     assert obtain_legal_actions(board, Disk.LIGHT) == frozenset(
         [Position(0, 2), Position(1, 3), Position(2, 0), Position(3, 1)]
@@ -75,7 +75,7 @@ def test_obtain_legal_actions():
     assert obtain_legal_actions(board, Disk.LIGHT) == frozenset()
 
 
-def test_execute_action():
+def test_execute_action() -> None:
     board = init_board(4)
     new_board = execute_action(board, Disk.LIGHT, Position(1, 3))
     config = np.array(

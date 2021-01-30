@@ -1,6 +1,7 @@
+"""reversi game"""
 from __future__ import annotations
 
-from typing import FrozenSet, Optional
+from typing import FrozenSet, Optional, cast
 
 from pyreversi import logic
 from pyreversi.models import Board, Disk, Position
@@ -12,7 +13,7 @@ class Game:
         self.board = board
         self._legal_actions = logic.obtain_legal_actions(board, self.current_disk)
         self._game_over = not self._legal_actions and not logic.obtain_legal_actions(
-            board, self.current_disk.reverse()
+            board, cast(Disk, self.current_disk.reverse())
         )
 
     @staticmethod
@@ -26,7 +27,7 @@ class Game:
     def get_legal_actions(self) -> FrozenSet[Position]:
         return self._legal_actions
 
-    def execute_action(self, action: Optional[Position]):
+    def execute_action(self, action: Optional[Position]) -> None:
         """execute action
 
         Args:
@@ -40,11 +41,11 @@ class Game:
         # Noneならパスなので，boardは変わらない
         if isinstance(action, Position):
             self.board = logic.execute_action(self.board, self.current_disk, action)
-        self.current_disk = self.current_disk.reverse()
+        self.current_disk = cast(Disk, self.current_disk.reverse())
         self._legal_actions = logic.obtain_legal_actions(self.board, self.current_disk)
         # 自分も相手も石を置ける場所がないなら，ゲーム終了
         self._game_over = not self._legal_actions and not logic.obtain_legal_actions(
-            self.board, self.current_disk.reverse()
+            self.board, cast(Disk, self.current_disk.reverse())
         )
 
     def is_legal_action(self, action: Optional[Position]) -> bool:

@@ -11,13 +11,16 @@ import numpy as np
 from pyreversi.models import _DIRECTIONS, Board, Direction, Disk, Position, Square
 
 
-def init_board(length: int):
+def init_board(length: int) -> Board:
     """initialize board
 
     Args:
         length (int): length of board
+
+    Returns:
+        Board: [description]
     """
-    config = np.zeros((length, length), dtype=np.int8)
+    config: np.ndarray = np.zeros((length, length), dtype=np.int8)
     config[length // 2][length // 2] = Square.LIGHT
     config[length // 2 - 1][length // 2 - 1] = Square.LIGHT
     config[length // 2][length // 2 - 1] = Square.DARK
@@ -36,7 +39,7 @@ def obtain_legal_actions(board: Board, disk: Disk) -> FrozenSet[Position]:
         FrozenSet[Position]: legal actions
     """
     return frozenset(
-        filter(lambda position: _is_legal_action(board, disk, position), board)
+        [position for position in board if _is_legal_action(board, disk, position)]
     )
 
 
@@ -128,9 +131,9 @@ def execute_action(board: Board, disk: Disk, position: Position) -> Board:
     # flip_position_listが1なら一枚もひっくり返らないのでlegal actionではない
     # 関数呼び出し側がちゃんとlegal actionとなるように注意する
     assert len(flip_position_list) > 1
-    config = board.config.copy()
-    for position in flip_position_list:
-        config[position] = disk
+    config: np.ndarray = board.config.copy()
+    for flipped_position in flip_position_list:
+        config[flipped_position] = disk
     return Board(config)
 
 
@@ -144,4 +147,4 @@ def count_disk(board: Board, disk: Disk) -> int:
     Returns:
         int: 数えたい石の数
     """
-    return np.count_nonzero(board.config == disk)
+    return int(np.count_nonzero(board.config == disk))
