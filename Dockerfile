@@ -1,14 +1,16 @@
 FROM python:3.8.6-slim-buster as builder
 WORKDIR /usr/src/app
+ARG POETRY_VERSION=1.1.4
 COPY pyproject.toml poetry.lock ./
-RUN pip install --disable-pip-version-check --no-cache-dir poetry && \
-    poetry export --without-hashes -f requirements.txt > requirements.txt
+RUN pip install --disable-pip-version-check --no-cache-dir poetry==${POETRY_VERSION} && \
+    poetry export --without-hashes -f requirements.txt -o requirements.txt
 
 FROM python:3.8.6-slim-buster
+ARG PIP_VERSION=21.0.1
 ARG USERNAME=python
 WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
+RUN pip install --no-cache-dir --upgrade pip==${PIP_VERSION} && \
     pip install --no-cache-dir -r requirements.txt && \
     rm requirements.txt \
     /bin/umount \
@@ -26,5 +28,4 @@ RUN pip install --no-cache-dir --upgrade pip && \
     groupadd -r ${USERNAME} && \
     useradd --no-log-init -r -g ${USERNAME} ${USERNAME}
 COPY . .
-RUN pip install --no-cache-dir .
 USER ${USERNAME}:${USERNAME}
