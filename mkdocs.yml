@@ -1,0 +1,45 @@
+# https://www.mkdocs.org/user-guide/configuration/
+site_name: pysamplepkg
+site_description: This is a sample python package to demonstrate how to use python tools
+repo_name: Arithmer/cloud-pysamplepkg
+repo_url: https://github.com/Arithmer/cloud-pysamplepkg
+
+strict: true
+
+dev_addr: 127.0.0.1:8888
+docs_dir: docs
+site_dir: site
+
+nav:
+  - Home: index.md
+
+theme:
+  name: "material"
+plugins:
+  - search
+  # https://mkdocstrings.github.io/handlers/python/
+  - mkdocstrings:
+      watch:
+        - arithmer_cloud
+      default_handler: python
+      handlers:
+        python:
+          selection:
+            filters:
+              - "!^_"
+              - "__init__"
+            members: true
+            inherited_members: true
+            docstring_style: google
+          rendering:
+            show_root_heading: true
+            show_root_toc_entry: true
+            show_root_full_path: true
+            show_object_full_path: false
+            show_root_members_full_path: true
+            show_category_heading: false
+            show_if_no_docstring: true
+            show_signature_annotations: true
+            show_source: true
+            group_by_category: true
+            heading_level: 2

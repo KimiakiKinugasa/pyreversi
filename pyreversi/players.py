@@ -35,9 +35,6 @@ class GreedyPlayer(Player):
     """greedy player
 
     常に自分の石が一番多くなる行動をするプレイヤー
-
-    Args:
-        Player ([type]): [description]
     """
 
     def play(self, game: Game) -> Optional[Position]:

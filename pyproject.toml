@@ -15,8 +15,12 @@ black = "*"
 isort = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-sugar = "*"
 mypy = "*"
-Sphinx = "*"
+tox = "*"
+lxml = "*"
+mkdocs-material = "*"
+mkdocstrings = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
