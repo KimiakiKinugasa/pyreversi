@@ -32,10 +32,3 @@ Build
 
 Play  
 `docker run --rm -it pyreversi python -m pyreversi`
-
-## Build documentation
-
-```sh
-sphinx-apidoc -f -o ./docs ./pyreversi
-sphinx-build -b singlehtml ./docs ./docs/_build
-```
