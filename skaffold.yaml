@@ -6,9 +6,6 @@ build:
   artifacts:
     - image: pyreversi
       context: .
-      docker:
-        buildArgs:
-          GITHUB_TOKEN: "{{.GITHUB_TOKEN}}"
   local:
     push: false
   tagPolicy:
