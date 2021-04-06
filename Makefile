@@ -1,4 +1,7 @@
 PACKAGE := pyreversi
+VERSION := $$(sed -n 's/__version__ = "\(.*\)"/\1/p' pyreversi/_version.py )
+
+export DOCKER_CONTENT_TRUST = 1
 
 # lists all available targets
 list:
@@ -9,9 +12,8 @@ list:
 # required for list
 no_targets__:
 
-lint:
-	@poetry run pylint -d C $(PACKAGE)
-	@poetry run mypy .
+setup:
+	@poetry install
 
 clean:
 	@rm -rf build dist .eggs *.egg-info
@@ -29,13 +31,14 @@ format:
 	@poetry run isort .
 	@poetry run black .
 
+lint:
+	@poetry run pylint -d C $(PACKAGE)
+	@poetry run mypy .
+
 # GitHub dependency graph does not support poetry.lock
 # https://docs.github.com/en/code-security/supply-chain-security/about-the-dependency-graph#supported-package-ecosystems
 requirements:
 	@poetry export --without-hashes -f requirements.txt -o requirements.txt
-
-setup:
-	@poetry install
 
 test:
 	@poetry run pytest
@@ -44,6 +47,13 @@ version:
 	@sed -n 's/version = \(.*\)/__version__ = \1/p' pyproject.toml > $(PACKAGE)/_version.py
 
 pre-commit: requirements version format lint test
+
+docker:
+	@hadolint Dockerfile
+	@docker build -t $(PACKAGE):$(VERSION) .
+	@dockle --exit-code 1 --exit-level info --ignore CIS-DI-0006 $(PACKAGE):$(VERSION)
+	@trivy image --clear-cache
+	@trivy image --exit-code 1 --ignore-unfixed $(PACKAGE):$(VERSION)
 
 # run tests against all supported python versions
 tox:
